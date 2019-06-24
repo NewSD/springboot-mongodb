@@ -2,6 +2,7 @@ package com.niu;
 
 import com.niu.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,30 @@ public class BookController {
         List<Book> books1 = bookDao.findByAuthorContains("鲁迅");
         System.out.println(books1);
         Book book = bookDao.findByNameEquals("朝花夕拾");
+        System.out.println(book);
+    }
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    @GetMapping("/test2")
+    public void test2(){
+        List<Book> books = new ArrayList<>();
+        Book b1 = new Book();
+        b1.setId(3);
+        b1.setName("围城");
+        b1.setAuthor("钱钟书");
+        books.add(b1);
+        Book b2 = new Book();
+        b2.setId(4);
+        b2.setName("宋诗选注");
+        b2.setAuthor("钱钟书");
+        books.add(b2);
+
+        mongoTemplate.insertAll(books);
+        List<Book> list = mongoTemplate.findAll(Book.class);
+        System.out.println(list);
+        Book book = mongoTemplate.findById(3, Book.class);
         System.out.println(book);
     }
 }
